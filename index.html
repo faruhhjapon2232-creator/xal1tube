@@ -13,10 +13,10 @@
 <!-- Окно авторизации -->
 <div id="authModal" class="watch-page" style="display: flex; align-items: center; justify-content: center; z-index: 5000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f;">
     <div style="background: #1f1f1f; padding: 30px; border-radius: 12px; width: 300px; text-align: center; border: 1px solid #383838;">
-        <h2 id="authTitle" style="margin-top:0;">Вход в xal1tube</h2>
+        <h2 style="margin-top:0;">Вход в xal1tube</h2>
         <input type="text" id="authName" class="inp" placeholder="Логин">
         <input type="password" id="authPass" class="inp" placeholder="Пароль">
-        <button id="authBtn" class="btn btn-red full-width" onclick="handleAuth()">Войти / Зарегистрироваться</button>
+        <button class="btn btn-red full-width" onclick="handleAuth()">Войти / Зарегистрироваться</button>
         <p id="authMsg" style="color: #ff4444; font-size: 12px; margin-top: 10px;"></p>
     </div>
 </div>
@@ -40,11 +40,10 @@
 
 <div class="main-layout">
     <nav id="sideNav" class="sidebar">
-        <a href="#" class="nav-item active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Главная</a>
-        <a href="#" class="nav-item" onclick="switchTab('subs')"><i class="fa-solid fa-layer-group"></i> Подписки</a>
+        <a href="#" class="nav-item active"><i class="fa-solid fa-house"></i> Главная</a>
         <hr class="nav-divider">
         <div class="nav-title">Мой аккаунт</div>
-        <a href="#" class="nav-item" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Выйти из аккаунта</a>
+        <a href="#" class="nav-item" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Выйти</a>
     </nav>
 
     <main class="content">
@@ -52,6 +51,7 @@
     </main>
 </div>
 
+<!-- Просмотр видео -->
 <div id="watchPage" style="display:none;">
     <div class="watch-container">
         <button class="btn back-btn" onclick="closeWatch()"><i class="fa-solid fa-arrow-left"></i> Назад</button>
@@ -63,9 +63,8 @@
                 <img id="vAuthAv" class="avatar-medium" alt="Avatar">
                 <div>
                     <div id="vAuthName" class="channel-name"></div>
-                    <div id="vSubCount" class="sub-count">Автор</div>
+                    <div class="sub-count">Автор</div>
                 </div>
-                <button id="subBtn" class="btn btn-sub" onclick="toggleSubscribe()">Подписаться</button>
             </div>
 
             <div class="actions">
@@ -90,15 +89,16 @@
     </div>
 </div>
 
+<!-- Загрузка видео -->
 <div id="sideMenu" class="drawer">
     <button class="close-btn" onclick="toggleSide()">&times;</button>
     <div class="drawer-section">
         <h3><i class="fa-solid fa-upload"></i> Опубликовать видео</h3>
         <input type="text" id="vT" class="inp" placeholder="Название видео">
-        <textarea id="vD" class="inp" placeholder="Описание видео..." rows="3"></textarea>
+        <textarea id="vD" class="inp" placeholder="Описание..." rows="3"></textarea>
         
-        <label class="input-label">Прямая ссылка на MP4 (Работает 24/7):</label>
-        <input type="text" id="vUrl" class="inp" placeholder="https://files.catbox.moe/example.mp4">
+        <label class="input-label">Прямая ссылка на MP4 (например с catbox.moe):</label>
+        <input type="text" id="vUrl" class="inp" placeholder="https://files.catbox.moe/sample.mp4">
         
         <button id="upB" class="btn btn-red full-width" onclick="uploadVideo()">ОПУБЛИКОВАТЬ</button>
     </div>
