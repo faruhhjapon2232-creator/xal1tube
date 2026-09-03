@@ -3,14 +3,12 @@ const gun = Gun([
     'https://relay.peer.ooo/gun'
 ]);
 
-const db = gun.get('xal1tube_v_final_v4');
+const db = gun.get('xal1tube_v_final_v5');
 
 let currentUser = JSON.parse(localStorage.getItem('xal1_user')) || null;
 let allVideos = {};
 let currentVidId = null;
-let currentTab = 'home';
 
-// ПРОВЕРКА АВТОРИЗАЦИИ ПРИ СТАРТЕ
 window.onload = function() {
     if (currentUser) {
         document.getElementById('authModal').style.display = 'none';
@@ -18,7 +16,6 @@ window.onload = function() {
     }
 };
 
-// АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ
 function handleAuth() {
     const name = document.getElementById('authName').value.trim();
     const pass = document.getElementById('authPass').value.trim();
@@ -29,27 +26,24 @@ function handleAuth() {
         return;
     }
 
-    const userNode = db.get('users_db').get(name);
+    let localUsers = JSON.parse(localStorage.getItem('xal1_users_db')) || {};
 
-    userNode.once((user) => {
-        if (user) {
-            // Пользователь существует -> Проверяем пароль
-            if (user.pass === pass) {
-                loginSuccess(name);
-            } else {
-                msg.innerText = "Неверный пароль для этого ника!";
-            }
+    if (localUsers[name]) {
+        if (localUsers[name] === pass) {
+            loginSuccess(name);
         } else {
-            // Новый пользователь -> Регистрируем
-            userNode.put({ name: name, pass: pass }, (ack) => {
-                if (!ack.err) loginSuccess(name);
-            });
+            msg.innerText = "Неверный пароль для этого ника!";
         }
-    });
+    } else {
+        localUsers[name] = pass;
+        localStorage.setItem('xal1_users_db', JSON.stringify(localUsers));
+        db.get('users_db').get(name).put({ name: name, pass: pass });
+        loginSuccess(name);
+    }
 }
 
 function loginSuccess(name) {
-    currentUser = { name: name, subs: [] };
+    currentUser = { name: name };
     localStorage.setItem('xal1_user', JSON.stringify(currentUser));
     document.getElementById('authModal').style.display = 'none';
     initUserUI();
@@ -65,13 +59,12 @@ function initUserUI() {
     document.getElementById('hAv').src = def;
 }
 
-// ПУБЛИКАЦИЯ ВИДЕО
 function uploadVideo() {
     const t = document.getElementById('vT').value.trim();
     const d = document.getElementById('vD').value.trim();
     const url = document.getElementById('vUrl').value.trim();
 
-    if (!t || !url) return alert("Введите название и вставьте прямую ссылку на .mp4 видео!");
+    if (!t || !url) return alert("Введите название и вставьте ссылку на .mp4!");
 
     const btn = document.getElementById('upB');
     btn.innerText = "ОТПРАВКА..."; 
@@ -97,12 +90,11 @@ function uploadVideo() {
             document.getElementById('vD').value = '';
             document.getElementById('vUrl').value = '';
         } else {
-            alert("Ошибка сети при сохранении.");
+            alert("Ошибка сети.");
         }
     });
 }
 
-// СИНХРОНИЗАЦИЯ ВИДЕО В РЕАЛЬНОМ ВРЕМЕНИ
 db.get('videos').map().on((v, id) => {
     if (!v || !v.src || !v.title) return;
     allVideos[id] = v;
