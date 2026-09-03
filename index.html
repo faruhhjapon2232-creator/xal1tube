@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xal1tube | Видеохостинг</title>
+    <!-- Gun.js для децентрализованной базы данных -->
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <!-- Иконки FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Стили -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ШАПКА САЙТА -->
+<header>
+    <div class="header-left">
+        <button class="icon-btn" onclick="toggleNav()"><i class="fa-solid fa-bars"></i></button>
+        <a href="#" class="logo" onclick="location.reload()">xal1<span>tube</span></a>
+    </div>
+    
+    <div class="search-bar-container">
+        <input type="text" id="vSearch" placeholder="Введите запрос..." oninput="searchVideos()">
+        <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+
+    <div class="header-right">
+        <button class="btn btn-red" onclick="toggleSide()"><i class="fa-solid fa-video"></i> Создать</button>
+        <img id="hAv" class="avatar-small" onclick="toggleSide()" alt="Avatar">
+    </div>
+</header>
+
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+<div class="main-layout">
+    <!-- Боковое меню -->
+    <nav id="sideNav" class="sidebar">
+        <a href="#" class="nav-item active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Главная</a>
+        <a href="#" class="nav-item" onclick="switchTab('subs')"><i class="fa-solid fa-layer-group"></i> Подписки</a>
+        <hr class="nav-divider">
+        <div class="nav-title">Мой аккаунт</div>
+        <a href="#" class="nav-item" onclick="toggleSide()"><i class="fa-solid fa-user"></i> Настройки профиля</a>
+    </nav>
+
+    <!-- Сетка с видео -->
+    <main class="content">
+        <div class="grid" id="vGrid"></div>
+    </main>
+</div>
+
+<!-- СТРАНИЦА ПРОСМОТРА ВИДЕО -->
+<div id="watchPage" style="display:none;">
+    <div class="watch-container">
+        <button class="btn back-btn" onclick="closeWatch()"><i class="fa-solid fa-arrow-left"></i> Назад</button>
+        
+        <div id="pBox" class="player-box"></div>
+        
+        <h1 id="vTitle" class="watch-title"></h1>
+        
+        <div class="watch-meta">
+            <div class="channel-info">
+                <img id="vAuthAv" class="avatar-medium" alt="Channel Avatar">
+                <div>
+                    <div id="vAuthName" class="channel-name"></div>
+                    <div id="vSubCount" class="sub-count">Автор</div>
+                </div>
+                <button id="subBtn" class="btn btn-sub" onclick="toggleSubscribe()">Подписаться</button>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-action" onclick="vote('likes')"><i class="fa-solid fa-thumbs-up"></i> <span id="vLikes">0</span></button>
+                <button class="btn btn-action" onclick="vote('dislikes')"><i class="fa-solid fa-thumbs-down"></i> <span id="vDis">0</span></button>
+            </div>
+        </div>
+
+        <div class="video-description-box">
+            <span id="vViews" class="bold-text">0 просмотров</span> • <span id="vDate"></span>
+            <p id="vDesc" class="desc-text"></p>
+        </div>
+
+        <div class="comments-section">
+            <h3>Комментарии</h3>
+            <div class="add-comment">
+                <input type="text" id="cInp" class="inp" placeholder="Оставьте комментарий...">
+                <button class="btn btn-red" onclick="sendComm()">Отправить</button>
+            </div>
+            <div id="cList" class="comments-list"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ВЫДВИЖНОЕ МЕНЮ (ПРОФИЛЬ И ЗАГРУЗКА) -->
+<div id="sideMenu" class="drawer">
+    <button class="close-btn" onclick="toggleSide()">&times;</button>
+    
+    <div class="drawer-section">
+        <h3><i class="fa-solid fa-user-gear"></i> Профиль</h3>
+        <div class="avatar-picker">
+            <img id="mAv" class="avatar-large" alt="Profile Avatar"><br>
+            <button class="btn btn-sm" onclick="document.getElementById('avInp').click()">Сменить аватар</button>
+            <input type="file" id="avInp" style="display:none" accept="image/*" onchange="changeAvatar(this)">
+        </div>
+        <input type="text" id="uName" class="inp" placeholder="Ваш никнейм">
+        <button class="btn btn-red full-width" onclick="saveProfile()">Сохранить профиль</button>
+    </div>
+
+    <hr class="nav-divider">
+
+    <div class="drawer-section">
+        <h3><i class="fa-solid fa-upload"></i> Опубликовать видео</h3>
+        <input type="text" id="vT" class="inp" placeholder="Название видео">
+        <textarea id="vD" class="inp" placeholder="Описание видео..." rows="3"></textarea>
+        
+        <label class="input-label">Ссылка на MP4 (рекомендуется):</label>
+        <input type="text" id="vUrl" class="inp" placeholder="https://site.com/video.mp4">
+        
+        <div class="or-divider">ИЛИ Загрузите файл с устройства (до 15 МБ):</div>
+        <input type="file" id="vF" class="inp" accept="video/*">
+        
+        <button id="upB" class="btn btn-red full-width" onclick="uploadVideo()">ОПУБЛИКОВАТЬ</button>
+    </div>
+</div>
+
+<!-- Скрипт логики -->
+<script src="script.js"></script>
+</body>
+</html>
