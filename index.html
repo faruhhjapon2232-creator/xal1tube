@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>xal1tube | Видеохостинг</title>
-    <!-- Gun.js для децентрализованной базы данных -->
     <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
-    <!-- Иконки FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Стили -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ШАПКА САЙТА -->
+<!-- Окно авторизации -->
+<div id="authModal" class="watch-page" style="display: flex; align-items: center; justify-content: center; z-index: 5000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f;">
+    <div style="background: #1f1f1f; padding: 30px; border-radius: 12px; width: 300px; text-align: center; border: 1px solid #383838;">
+        <h2 id="authTitle" style="margin-top:0;">Вход в xal1tube</h2>
+        <input type="text" id="authName" class="inp" placeholder="Логин">
+        <input type="password" id="authPass" class="inp" placeholder="Пароль">
+        <button id="authBtn" class="btn btn-red full-width" onclick="handleAuth()">Войти / Зарегистрироваться</button>
+        <p id="authMsg" style="color: #ff4444; font-size: 12px; margin-top: 10px;"></p>
+    </div>
+</div>
+
 <header>
     <div class="header-left">
         <button class="icon-btn" onclick="toggleNav()"><i class="fa-solid fa-bars"></i></button>
@@ -31,35 +38,29 @@
     </div>
 </header>
 
-<!-- ОСНОВНОЙ КОНТЕНТ -->
 <div class="main-layout">
-    <!-- Боковое меню -->
     <nav id="sideNav" class="sidebar">
         <a href="#" class="nav-item active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Главная</a>
         <a href="#" class="nav-item" onclick="switchTab('subs')"><i class="fa-solid fa-layer-group"></i> Подписки</a>
         <hr class="nav-divider">
         <div class="nav-title">Мой аккаунт</div>
-        <a href="#" class="nav-item" onclick="toggleSide()"><i class="fa-solid fa-user"></i> Настройки профиля</a>
+        <a href="#" class="nav-item" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Выйти из аккаунта</a>
     </nav>
 
-    <!-- Сетка с видео -->
     <main class="content">
         <div class="grid" id="vGrid"></div>
     </main>
 </div>
 
-<!-- СТРАНИЦА ПРОСМОТРА ВИДЕО -->
 <div id="watchPage" style="display:none;">
     <div class="watch-container">
         <button class="btn back-btn" onclick="closeWatch()"><i class="fa-solid fa-arrow-left"></i> Назад</button>
-        
         <div id="pBox" class="player-box"></div>
-        
         <h1 id="vTitle" class="watch-title"></h1>
         
         <div class="watch-meta">
             <div class="channel-info">
-                <img id="vAuthAv" class="avatar-medium" alt="Channel Avatar">
+                <img id="vAuthAv" class="avatar-medium" alt="Avatar">
                 <div>
                     <div id="vAuthName" class="channel-name"></div>
                     <div id="vSubCount" class="sub-count">Автор</div>
@@ -89,39 +90,20 @@
     </div>
 </div>
 
-<!-- ВЫДВИЖНОЕ МЕНЮ (ПРОФИЛЬ И ЗАГРУЗКА) -->
 <div id="sideMenu" class="drawer">
     <button class="close-btn" onclick="toggleSide()">&times;</button>
-    
-    <div class="drawer-section">
-        <h3><i class="fa-solid fa-user-gear"></i> Профиль</h3>
-        <div class="avatar-picker">
-            <img id="mAv" class="avatar-large" alt="Profile Avatar"><br>
-            <button class="btn btn-sm" onclick="document.getElementById('avInp').click()">Сменить аватар</button>
-            <input type="file" id="avInp" style="display:none" accept="image/*" onchange="changeAvatar(this)">
-        </div>
-        <input type="text" id="uName" class="inp" placeholder="Ваш никнейм">
-        <button class="btn btn-red full-width" onclick="saveProfile()">Сохранить профиль</button>
-    </div>
-
-    <hr class="nav-divider">
-
     <div class="drawer-section">
         <h3><i class="fa-solid fa-upload"></i> Опубликовать видео</h3>
         <input type="text" id="vT" class="inp" placeholder="Название видео">
         <textarea id="vD" class="inp" placeholder="Описание видео..." rows="3"></textarea>
         
-        <label class="input-label">Ссылка на MP4 (рекомендуется):</label>
-        <input type="text" id="vUrl" class="inp" placeholder="https://site.com/video.mp4">
-        
-        <div class="or-divider">ИЛИ Загрузите файл с устройства (до 15 МБ):</div>
-        <input type="file" id="vF" class="inp" accept="video/*">
+        <label class="input-label">Прямая ссылка на MP4 (Работает 24/7):</label>
+        <input type="text" id="vUrl" class="inp" placeholder="https://files.catbox.moe/example.mp4">
         
         <button id="upB" class="btn btn-red full-width" onclick="uploadVideo()">ОПУБЛИКОВАТЬ</button>
     </div>
 </div>
 
-<!-- Скрипт логики -->
 <script src="script.js"></script>
 </body>
 </html>
